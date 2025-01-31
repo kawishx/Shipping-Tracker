@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipping Tracker V1", "Shipping Tracker V1\Shipping Tracker V1.csproj", "{6136FF84-3E0C-48E2-9440-50C8F7C8129C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6136FF84-3E0C-48E2-9440-50C8F7C8129C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6136FF84-3E0C-48E2-9440-50C8F7C8129C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6136FF84-3E0C-48E2-9440-50C8F7C8129C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6136FF84-3E0C-48E2-9440-50C8F7C8129C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {799C2D4D-37D8-4E59-941D-ECA80DAA3B78}
+	EndGlobalSection
+EndGlobal
