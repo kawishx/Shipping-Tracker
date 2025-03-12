@@ -61,7 +61,7 @@
         <h1 class="home-title">Welcome to Renuka Group</h1>
         <p class="home-subtitle">Shipment Tracking Web Application</p>
         <p>Use the menu buttons above to navigate through the system and start managing your shipments efficiently.</p>
-        <a href="ShippingDetails.aspx" class="action-btn">Get Started</a>
+        <a href="OrderCheckList.aspx" class="action-btn">Get Started</a>
     </div>
 
 </asp:Content>

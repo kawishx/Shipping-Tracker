@@ -131,12 +131,7 @@
         </header>
 
         <nav>
-            <ul>
-                <li><a href="ShippingDetails.aspx">Shipping Details</a></li>
-                <li><a href="OrderChecklist.aspx">Order Checklist</a></li>
-                <li><a href="ViewLists.aspx">View Lists</a></li>
-                <li><a href="Analytics.aspx">Analytics</a></li>
-            </ul>
+            <asp:Literal ID="NavMenu" runat="server"></asp:Literal>
         </nav>
 
         <main>

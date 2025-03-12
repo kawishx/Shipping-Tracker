@@ -124,9 +124,9 @@
             min-width: 300px;
         }
         .readonly-field {
-            background-color: #f0f0f0;  /* Light grey background */
-            border: 1px solid #ddd;     /* Lighter border */
-            cursor: not-allowed;        /* Show a non-editable cursor */
+            background-color: #f0f0f0;  
+            border: 1px solid #ddd;     
+            cursor: not-allowed;        
         }
 
         .text-end {

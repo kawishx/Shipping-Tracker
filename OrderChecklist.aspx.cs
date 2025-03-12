@@ -73,7 +73,7 @@ namespace Shipping_Tracker_V1
             ClearFields();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
-            {
+            { 
                 string query = @"
                     SELECT 
                         CASE 
@@ -121,9 +121,9 @@ namespace Shipping_Tracker_V1
                             ELSE currency_code 
                         END AS currency_code,
                         CASE 
-                            WHEN export_apprvl LIKE '%&nbsp;%' THEN REPLACE(export_apprvl, '&nbsp;', ' ')
-                            ELSE export_apprvl 
-                        END AS export_apprvl,
+                            WHEN EXNOP LIKE '%&nbsp;%' THEN REPLACE(EXNOP, '&nbsp;', ' ')
+                            ELSE EXNOP 
+                        END AS EXNOP,
                         CASE 
                             WHEN fumigation LIKE '%&nbsp;%' THEN REPLACE(fumigation, '&nbsp;', ' ')
                             ELSE fumigation 
@@ -243,8 +243,31 @@ namespace Shipping_Tracker_V1
                         CASE 
                             WHEN CUSD_DATE LIKE '%&nbsp;%' THEN REPLACE(CUSD_DATE, '&nbsp;', ' ')
                             ELSE CUSD_DATE 
-                        END AS CUSD_DATE
-                       
+                        END AS CUSD_DATE,
+                        CASE 
+                            WHEN CUSDEC_NO LIKE '%&nbsp;%' THEN REPLACE(CUSDEC_NO, '&nbsp;', ' ')
+                            ELSE CUSDEC_NO 
+                        END AS CUSDEC_NO,
+                        CASE 
+                            WHEN FMG LIKE '%&nbsp;%' THEN REPLACE(FMG, '&nbsp;', ' ')
+                            ELSE FMG 
+                        END AS FMG,
+                        CASE 
+                            WHEN No_of_cont LIKE '%&nbsp;%' THEN REPLACE(FMG, '&nbsp;', ' ')
+                            ELSE No_of_cont 
+                        END AS No_of_cont,
+                        CASE 
+                            WHEN consize LIKE '%&nbsp;%' THEN REPLACE(consize, '&nbsp;', ' ')
+                            ELSE consize 
+                        END AS consize,
+                        CASE 
+                            WHEN Pack_List_Date LIKE '%&nbsp;%' THEN REPLACE(Pack_List_Date, '&nbsp;', ' ')
+                            ELSE Pack_List_Date 
+                        END AS Pack_List_Date,
+                        CASE 
+                            WHEN Inv_List_Date LIKE '%&nbsp;%' THEN REPLACE(Inv_List_Date, '&nbsp;', ' ')
+                            ELSE Inv_List_Date 
+                        END AS Inv_List_Date
                     FROM order_details WHERE order_no = @OrderNo";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
@@ -300,7 +323,6 @@ namespace Shipping_Tracker_V1
             placeholder.Controls.Add(colDiv);
             placeholder.Controls.Add(new Literal { Text = $"<label class='form-label'>{labelText}:</label>" });
 
-            // Create the TextBox
             TextBox textBox = new TextBox
             {
                 ID = controlId,
@@ -308,7 +330,6 @@ namespace Shipping_Tracker_V1
                 CssClass = "form-control"
             };
 
-            // Make only "RO Received Date" field non-editable
             if (labelText.Equals("RO Received Date", StringComparison.OrdinalIgnoreCase))
             {
                 textBox.ReadOnly = true;
@@ -322,6 +343,11 @@ namespace Shipping_Tracker_V1
             }
 
             if (labelText.Equals("Cusdec Done Date", StringComparison.OrdinalIgnoreCase))
+            {
+                textBox.ReadOnly = true;
+                textBox.CssClass += " readonly-field";
+            }
+            if (labelText.Equals("Cusdec Number", StringComparison.OrdinalIgnoreCase))
             {
                 textBox.ReadOnly = true;
                 textBox.CssClass += " readonly-field";
@@ -386,6 +412,16 @@ namespace Shipping_Tracker_V1
                 textBox.ReadOnly = true;
                 textBox.CssClass += " readonly-field";
             }
+            if (labelText.Equals("Dock Code", StringComparison.OrdinalIgnoreCase))
+            {
+                textBox.ReadOnly = true;
+                textBox.CssClass += " readonly-field";
+            }
+            if (labelText.Equals("Container Size", StringComparison.OrdinalIgnoreCase))
+            {
+                textBox.ReadOnly = true;
+                textBox.CssClass += " readonly-field";
+            }
             if (labelText.Equals("Advance Invoice Amount", StringComparison.OrdinalIgnoreCase))
             {
                 textBox.ReadOnly = true;
@@ -396,11 +432,19 @@ namespace Shipping_Tracker_V1
                 textBox.ReadOnly = true;
                 textBox.CssClass += " readonly-field";
             }
+            if (labelText.Equals("Currency", StringComparison.OrdinalIgnoreCase))
+            {
+                textBox.ReadOnly = true;
+                textBox.CssClass += " readonly-field";
+            }
+            if (labelText.Equals("Export Approval/ NOP", StringComparison.OrdinalIgnoreCase))
+            {
+                textBox.ReadOnly = true;
+                textBox.CssClass += " readonly-field";
+            }
 
-            // Add the TextBox to the placeholder inside the column
             placeholder.Controls.Add(textBox);
 
-            // Close the column div
             placeholder.Controls.Add(new Literal { Text = "</div>" });
         }
 
@@ -439,36 +483,58 @@ namespace Shipping_Tracker_V1
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                // Fetch existing record to prevent overwriting fields with NULL
+                string selectQuery = "SELECT * FROM order_details WHERE order_no = @OrderNo";
+                SqlCommand selectCmd = new SqlCommand(selectQuery, conn);
+                selectCmd.Parameters.AddWithValue("@OrderNo", orderNo);
+
+                conn.Open();
+                SqlDataReader reader = selectCmd.ExecuteReader();
+
+                Dictionary<string, object> existingData = new Dictionary<string, object>();
+
+                if (reader.Read())  
+                {
+                    foreach (var field in GetCategoryFields(category))
+                    {
+                        existingData[field.Column] = reader[field.Column] != DBNull.Value ? reader[field.Column] : null;
+                    }
+                }
+                reader.Close();
+
+                // Prepare update statement
                 var fields = GetCategoryFields(category);
                 string setClause = string.Join(", ", fields.Select(f => $"{f.Column} = @{f.Column}"));
-                string query = $"UPDATE order_details SET {setClause} WHERE order_no = @OrderNo";
 
-                SqlCommand cmd = new SqlCommand(query, conn);
+                string updateQuery = $"UPDATE order_details SET {setClause} WHERE order_no = @OrderNo";
+                SqlCommand updateCmd = new SqlCommand(updateQuery, conn);
 
-                try
+                foreach (var field in fields)
                 {
-                    foreach (var field in fields)
+                    string fieldValue = GetTextBoxValue(placeholder, field.ControlId);
+
+                    if (!string.IsNullOrEmpty(fieldValue))
                     {
-                        string fieldValue = GetTextBoxValue(placeholder, field.ControlId);
-                        cmd.Parameters.AddWithValue($"@{field.Column}", fieldValue ?? (object)DBNull.Value);
+                        // Use the new value if provided
+                        updateCmd.Parameters.AddWithValue($"@{field.Column}", fieldValue);
                     }
-                    cmd.Parameters.AddWithValue("@OrderNo", orderNo);
-
-                    conn.Open();
-                    int rowsAffected = cmd.ExecuteNonQuery();
-
-                    lblMessage.Text = rowsAffected > 0
-                        ? $"{category} Info saved successfully."
-                        : "No rows updated. Please check the Order Number.";
-                    lblMessage.ForeColor = System.Drawing.Color.Green;
+                    else
+                    {
+                        // Keep existing value if new value is empty
+                        updateCmd.Parameters.AddWithValue($"@{field.Column}", existingData[field.Column] ?? DBNull.Value);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    lblMessage.Text = "Error saving data: " + ex.Message;
-                    lblMessage.ForeColor = System.Drawing.Color.Red;
-                }
+                updateCmd.Parameters.AddWithValue("@OrderNo", orderNo);
+
+                int rowsAffected = updateCmd.ExecuteNonQuery();
+
+                lblMessage.Text = rowsAffected > 0
+                    ? $"{category} Info saved successfully."
+                    : "No rows updated. Please check the Order Number.";
+                lblMessage.ForeColor = System.Drawing.Color.Green;
             }
         }
+
 
         private string GetTextBoxValue(PlaceHolder placeholder, string controlId)
         {
@@ -494,6 +560,7 @@ namespace Shipping_Tracker_V1
                     {
                         new FieldInfo("RO Received Date", "txtROReceivedDate", "RODATE", true),
                         new FieldInfo("Cusdec Done Date", "txtCusdecDoneDate", "CUSD_DATE", true),
+                        new FieldInfo("Cusdec Number", "txtCusdecNumber", "CUSDEC_NO", true),
                         new FieldInfo("Vessel Name", "txtVesselName","ship_via", true),
                         new FieldInfo("Customer Name", "txtCustomerName","name", true),
                         new FieldInfo("ETA Colombo", "txtETAColombo", "ETA", true),
@@ -503,9 +570,13 @@ namespace Shipping_Tracker_V1
                         new FieldInfo("Payment Term", "txtPaymentTerm", "pay_term", true),
                         new FieldInfo("Currency", "txtCurrency", "currency_code"),
                         new FieldInfo("Port", "txtPort", "del_terms", true),
+                        new FieldInfo("No of Containers", "txtNoofContainers", "No_of_cont"),
+                        new FieldInfo("Container Size", "txtContainerSize", "consize",  true),
                         new FieldInfo("Delivery Term", "txtDeliveryTerm", "Del_term", true),
-                        new FieldInfo("Export Approval/ NOP", "txtExportApproval/NOP", "export_apprvl"),
+                        new FieldInfo("Export Approval/ NOP", "txtExportApproval/NOP", "EXNOP"),
                         new FieldInfo("Fumigation", "txtFumigation", "fumigation"),
+                        new FieldInfo("Dock Code", "txtDockCode", "dock_code", true),
+                        new FieldInfo("FMG", "txtFMG", "FMG"),
             };
                 case "Loading":
                     return new[]
@@ -532,7 +603,8 @@ namespace Shipping_Tracker_V1
                         new FieldInfo("COI Draft to Customer", "txtCOIDrafttoCustomer", "Coi_draft_cus"),
                         new FieldInfo ("Original COI Sent to Cus.", "txtOriginalCOISenttoCus.", "Coi_sent_cus"),
                         new FieldInfo("Final Docs/ Banked/ Courier Date", "txtFinalDocs/Banked/CourierDate", "finaldoc_date"),
-
+                        new FieldInfo("Packing List Send Date", "txtPackingListSendDate", "Pack_List_Date"),
+                        new FieldInfo("Invoice Send Date", "txtInvoiceSendDate", "Inv_List_Date"),
             };
                 case "Payment":
                     return new[]

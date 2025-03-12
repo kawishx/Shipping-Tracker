@@ -129,7 +129,9 @@
     <Content Include="Images\logo.png" />
     <Content Include="Images\shipping.jpg" />
     <Content Include="Login.aspx" />
+    <Content Include="NewEntry.aspx" />
     <Content Include="OrderChecklist.aspx" />
+    <Content Include="OrderSummary.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -187,6 +189,8 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="ShippingDetails.aspx" />
     <Content Include="Site.Master" />
+    <Content Include="UpdateIFS.aspx" />
+    <Content Include="UserPages.aspx" />
     <Content Include="ViewLists.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
@@ -241,12 +245,26 @@
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
+    <Compile Include="NewEntry.aspx.cs">
+      <DependentUpon>NewEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewEntry.aspx.designer.cs">
+      <DependentUpon>NewEntry.aspx</DependentUpon>
+    </Compile>
     <Compile Include="OrderChecklist.aspx.cs">
       <DependentUpon>OrderChecklist.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="OrderChecklist.aspx.designer.cs">
       <DependentUpon>OrderChecklist.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="OrderSummary.aspx.cs">
+      <DependentUpon>OrderSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="OrderSummary.aspx.designer.cs">
+      <DependentUpon>OrderSummary.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShippingDetails.aspx.cs">
@@ -269,6 +287,20 @@
     </Compile>
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateIFS.aspx.cs">
+      <DependentUpon>UpdateIFS.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UpdateIFS.aspx.designer.cs">
+      <DependentUpon>UpdateIFS.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserPages.aspx.cs">
+      <DependentUpon>UserPages.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserPages.aspx.designer.cs">
+      <DependentUpon>UserPages.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewLists.aspx.cs">
       <DependentUpon>ViewLists.aspx</DependentUpon>

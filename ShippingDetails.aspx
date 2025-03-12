@@ -10,7 +10,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1700px;
             margin: 30px auto;
             padding: 20px;
             background-color: #ffffff;
@@ -158,36 +158,48 @@
             <asp:Button ID="btnFetchDetails" runat="server" Text="Fetch Details" CssClass="fetch-btn" OnClick="btnFetchDetails_Click" />
         </div>
         <div class="table-container">
-            <asp:GridView ID="gvOrderDetails" runat="server" AutoGenerateColumns="false" CssClass="order-table" GridLines="None" OnRowCommand="gvOrderDetails_RowCommand">
-                <Columns>
-                    <asp:BoundField DataField="order_no" HeaderText="Order No" />
-                    <asp:BoundField DataField="name" HeaderText="Name">
-                     <ItemStyle Width="1px" />
-                    </asp:BoundField>
-                    <asp:BoundField DataField="Del_term" HeaderText="Delivery Term" />
-                    <asp:BoundField DataField="Ship_via" HeaderText="Vessal Name" />
-                    <asp:BoundField DataField="del_terms" HeaderText="Delivery Location" />
-                    <asp:BoundField DataField="ETD" HeaderText="ETD" />
-                    <asp:BoundField DataField="RODATE" HeaderText="RO DATE" />
-                    <asp:BoundField DataField="CONTNO" HeaderText="Container No" />
-                    <asp:BoundField DataField="SHLINE" HeaderText="Ship Line" />
-                    <asp:BoundField DataField="CONSN" HeaderText="Seal No" />
-                    <asp:BoundField DataField="customer_no" HeaderText="Customer No" />
-                    <asp:BoundField DataField="Advance" HeaderText="Advance Amount" />
-                    <asp:BoundField DataField="account" HeaderText="Bank Account" />
-                    <asp:BoundField DataField="ETA" HeaderText="ETA" />
-                    <asp:BoundField DataField="CUSD_DATE" HeaderText="Cusd Date" />
-                    <asp:BoundField DataField="FORWARD" HeaderText="Forwarder" />
-                    <asp:BoundField DataField="dock_code" HeaderText="Dock Code" />
-                    <asp:BoundField DataField="pay_term" HeaderText="Pay Term" />
-                    
-                    <asp:TemplateField>
-                        <ItemTemplate>
-                            <asp:Button ID="btnSaveRow" runat="server" Text="Save Row" CssClass="save-row-btn" CommandName="SaveOrder" CommandArgument="<%# Container.DataItemIndex %>" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-            </asp:GridView>
+          <asp:GridView ID="gvOrderDetails" runat="server" AutoGenerateColumns="false" CssClass="order-table" GridLines="None" OnRowCommand="gvOrderDetails_RowCommand" OnRowDataBound="gvOrderDetails_RowDataBound">
+    <Columns>
+        <asp:BoundField DataField="order_no" HeaderText="Order No" />
+        <asp:BoundField DataField="name" HeaderText="Name" />
+        <asp:BoundField DataField="Del_term" HeaderText="Delivery Term" />
+        <asp:BoundField DataField="Ship_via" HeaderText="Vessel Name" />
+        <asp:BoundField DataField="SHLINE" HeaderText="Ship Line" />
+        <asp:BoundField DataField="FORWARD" HeaderText="Forwarder" />
+        <asp:BoundField DataField="ETA" HeaderText="ETA to Colombo" />
+        <asp:BoundField DataField="del_terms" HeaderText="Delivery Location" />
+        <asp:BoundField DataField="RODATE" HeaderText="RO DATE" />
+        <asp:BoundField DataField="CUSD_DATE" HeaderText="Cusd Date" />
+        <asp:BoundField DataField="CUSDEC_NO" HeaderText="Cusd NO" />
+        <asp:BoundField DataField="FMG" HeaderText="Fumigation" />
+        <asp:BoundField DataField="EXNOP" HeaderText="Export Aprvl/NOP" />
+
+        <asp:TemplateField HeaderText="Hidden Fields" Visible="False">
+            <ItemTemplate>
+                <asp:HiddenField ID="hfCONTNO" runat="server" Value='<%# Eval("CONTNO") %>' />
+                <asp:HiddenField ID="hfETD" runat="server" Value='<%# Eval("ETD") %>' />
+                <asp:HiddenField ID="hfcurrencycode" runat="server" Value='<%# Eval("currency_code") %>' />
+                <asp:HiddenField ID="hfCONSN" runat="server" Value='<%# Eval("CONSN") %>' />
+                <asp:HiddenField ID="hfcustomerno" runat="server" Value='<%# Eval("customer_no") %>' />
+                <asp:HiddenField ID="hfAdvance" runat="server" Value='<%# Eval("Advance") %>' />
+                <asp:HiddenField ID="hfAccount" runat="server" Value='<%# Eval("account") %>' />
+                <asp:HiddenField ID="hfCUSDDate" runat="server" Value='<%# Eval("CUSD_DATE") %>' />
+                <asp:HiddenField ID="hfDockCode" runat="server" Value='<%# Eval("dock_code") %>' />
+                <asp:HiddenField ID="hfPayTerm" runat="server" Value='<%# Eval("pay_term") %>' />
+                <asp:HiddenField ID="hfstgroup" runat="server" Value='<%# Eval("stgroup") %>' />
+                <asp:HiddenField ID="hfconsize" runat="server" Value='<%# Eval("consize") %>' />
+            </ItemTemplate>
+        </asp:TemplateField>
+
+        <asp:TemplateField>
+            <ItemTemplate>
+                <asp:Button ID="btnSaveRow" runat="server" Text="Save Row" CssClass="save-row-btn" CommandName="SaveOrder" CommandArgument="<%# Container.DataItemIndex %>" />
+            </ItemTemplate>
+        </asp:TemplateField>
+    </Columns>
+</asp:GridView>
+
+
         </div>
     </div>
 </asp:Content>
